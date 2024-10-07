@@ -1,4 +1,4 @@
-const { Transform } = require('stream');
+import { Transform } from "stream";
 
 const transform = async () => {
     const reverseStream = new Transform({
@@ -10,7 +10,7 @@ const transform = async () => {
 
     try {
         process.stdin.pipe(reverseStream).pipe(process.stdout);
-    } catch {
+    } catch (error) {
         throw new Error('Transform operation failed');
     }
 };

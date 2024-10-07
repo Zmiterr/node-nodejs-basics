@@ -9,7 +9,6 @@ const rename = async () => {
     try {
         await fs.access(oldPath);
         await fs.access(newPath);
-        throw new Error('FS operation failed');
     } catch {
         try {
             await fs.rename(oldPath, newPath);
