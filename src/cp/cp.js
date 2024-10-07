@@ -9,6 +9,7 @@ const spawnChildProcess = async (args) => {
     const scriptPath = path.join(__dirname, 'files','script.js');
 
     const child = spawn('node', [scriptPath, ...args], {
+        //I don't know how it works, but I found this solution
         stdio: ['pipe', 'pipe', 'pipe', 'ipc']
     });
 
