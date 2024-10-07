@@ -1,6 +1,37 @@
+import { spawn } from 'child_process';
+import path from 'path';
+import {fileURLToPath} from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const spawnChildProcess = async (args) => {
-    // Write your code here
+    const scriptPath = path.join(__dirname, 'files','script.js');
+
+    const child = spawn('node', [scriptPath, ...args], {
+        //I don't know how it works, but I found this solution
+        stdio: ['pipe', 'pipe', 'pipe', 'ipc']
+    });
+
+    child.stdout.on('data', (data) => {
+        process.stdout.write(`Child stdout: ${data}`);
+    });
+
+    child.stderr.on('data', (data) => {
+        process.stderr.write(`Child stderr: ${data}`);
+    });
+
+    process.stdin.pipe(child.stdin);
+
+    child.on('close', (code) => {
+        console.log(`Child process exited with code ${code}`);
+    });
+
+    child.send({ msg: 'Hello from parent process' });
+
+    child.on('message', (message) => {
+        console.log('Message from child:', message);
+    });
 };
 
-// Put your arguments in function call to test this functionality
-spawnChildProcess( /* [someArgument1, someArgument2, ...] */);
+spawnChildProcess(  ['someArgument1', 'someArgument2']);

@@ -1,5 +1,31 @@
+import crypto from 'crypto';
+import fs from 'fs';
+import path from 'path';
+import {fileURLToPath} from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const calculateHash = async () => {
-    // Write your code here 
+    const filePath = path.join(__dirname, 'files', 'fileToCalculateHashFor.txt');
+
+    try {
+        await fs.promises.access(filePath);
+
+        const hash = crypto.createHash('sha256');
+        const stream = fs.createReadStream(filePath);
+
+        stream.on('data', chunk => hash.update(chunk));
+        stream.on('end', () => {
+            console.log(hash.digest('hex'));
+        });
+
+        stream.on('error', (error) => {
+            console.error('FS operation failed:', error);
+        });
+    } catch (error) {
+        console.error('FS operation failed:', error);
+    }
 };
 
-await calculateHash();
+await calculateHash(); // Вызов функции
