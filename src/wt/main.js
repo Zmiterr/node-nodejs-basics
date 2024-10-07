@@ -8,12 +8,10 @@ const __dirname = path.dirname(__filename);
 
 const performCalculations = async () => {
     const numberOfCores = os.cpus().length;
-    const workers = [];
     const results = [];
 
     for (let i = 0; i < numberOfCores; i++) {
         const worker = new Worker(path.join(__dirname, 'worker.js'));
-        workers.push(worker);
 
         const n = 10 + i;
 
