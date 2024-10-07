@@ -3,18 +3,24 @@ import { release, version } from 'os';
 import { createServer as createServerHttp } from 'http';
 import './files/c.js';
 import {fileURLToPath} from "url";
+import { promises as fs } from 'fs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+const filePathA = path.join(__dirname, 'files', 'a.json');
+const filePathB = path.join(__dirname, 'files', 'b.json');
 
 const random = Math.random();
 
 let unknownObject;
 
 if (random > 0.5) {
-    unknownObject = await import('./files/a.json', { with: { type: 'json' } });
+    const data = await fs.readFile(filePathA, 'utf-8');
+    unknownObject = JSON.parse(data);
 } else {
-    unknownObject = await import('./files/b.json', { with: { type: 'json' } });
+    const data = await fs.readFile(filePathB, 'utf-8');
+    unknownObject = JSON.parse(data);
 }
 
 console.log(`Release ${release()}`);
