@@ -1,5 +1,27 @@
+import { createReadStream, createWriteStream, promises as fs } from 'fs';
+import { createGzip } from 'zlib';
+import path from 'path';
+import {promisify} from 'node:util'
+import { pipeline } from'node:stream'
+
 const compress = async () => {
-    // Write your code here 
+    const gzip = createGzip();
+    const pipe = promisify(pipeline);
+
+
+    const sourcePath = path.join(process.cwd(), 'files', 'fileToCompress.txt');
+    const destinationPath = path.join(process.cwd(), 'files', 'archive.gz');
+
+    try {
+        const readStream = createReadStream(sourcePath);
+        const writeStream = createWriteStream(destinationPath);
+
+        await pipe(readStream, gzip, writeStream)
+        console.log('File compressed successfully')
+    } catch (error) {
+        console.error('An unexpected error occurred:', error);
+        throw new Error('Compression failed');
+    }
 };
 
 await compress();
