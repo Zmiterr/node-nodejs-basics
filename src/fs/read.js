@@ -1,5 +1,5 @@
 import { promises as fs } from 'fs';
-import path, { dirname } from 'path';
+import path from 'path';
 import { __dirname } from './pathUtils.js'
 
 const read = async () => {
